@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Prediksi — CreditGuard</title>
+    <meta name="description" content="Hasil prediksi risiko gagal bayar pinjaman menggunakan Regresi Logistik.">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lottie -->
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
+</head>
+
+<body>
+
+    <!-- Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="split-card">
+        <!-- Kiri: Animasi & Info -->
+        <div class="split-left">
+            <!-- Lottie Animation -->
+            <dotlottie-wc
+                src="https://lottie.host/7a03aa05-5941-4783-8042-fe50abca5be8/Rij9tWwbOu.lottie"
+                style="width: 160px; height: 160px; margin-top: -1rem; margin-bottom: -0.3rem;"
+                autoplay loop>
+            </dotlottie-wc>
+
+            <h1>Analisis Selesai!</h1>
+
+            <div class="info-box">
+                <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-circle-info" style="margin-right: 6px; color: var(--secondary);"></i>
+                    Tentang Prediksi Ini
+                </p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">
+                    Model <strong>Regresi Logistik</strong> telah menganalisis data nasabah Anda.
+                    Nasabah ini diprediksi
+                    {% if is_risky %}
+                    <strong style="color: var(--danger);">{{ prediction }}</strong>.
+                    {% else %}
+                    <strong style="color: var(--success);">{{ prediction }}</strong>.
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="info-box" style="margin-top: 0.7rem;">
+                <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-lightbulb" style="margin-right: 6px; color: var(--accent);"></i>
+                    Info Model
+                </p>
+                <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.6;">
+                    Algoritma: Regresi Logistik (SMOTE)<br>
+                    Data Latih: 32.581 nasabah<br>
+                    AUC Score: 84.52%
+                </p>
+            </div>
+        </div>
+
+        <!-- Kanan: Hasil Prediksi -->
+        <div class="split-right">
+            <h2 style="margin-bottom: 0.5rem;">Hasil Analisis Kredit</h2>
+
+            <p style="margin-bottom: 0.3rem; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                Status Risiko Nasabah
+            </p>
+
+            {% if is_risky %}
+            <div class="prediction-badge risky">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {{ prediction }}
+            </div>
+            {% else %}
+            <div class="prediction-badge safe">
+                <i class="fa-solid fa-shield-halved"></i>
+                {{ prediction }}
+            </div>
+            {% endif %}
+
+            <!-- Confidence Bar -->
+            <div class="confidence-bar-container">
+                <div class="confidence-label">
+                    <span><i class="fa-solid fa-chart-line" style="margin-right: 4px;"></i> Probabilitas Gagal Bayar</span>
+                    <span style="font-weight: 600;
+                        {% if is_risky %}color: var(--danger);{% else %}color: var(--success);{% endif %}">
+                        {{ confidence }}%
+                    </span>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill {% if is_risky %}risky{% else %}safe{% endif %}"
+                         style="width: {{ confidence }}%;"></div>
+                </div>
+            </div>
+
+            <!-- Detail Nasabah -->
+            <p class="detail-title">
+                <i class="fa-solid fa-clipboard-list" style="margin-right: 6px;"></i>
+                Detail Data Nasabah
+            </p>
+            <div class="detail-list">
+                <div class="detail-item">
+                    <span class="detail-label">Usia</span>
+                    <span class="detail-value">{{ input_data.Age }} thn</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Pendapatan</span>
+                    <span class="detail-value">${{ "{:,.0f}".format(input_data.Income) }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status Rumah</span>
+                    <span class="detail-value">{{ input_data.Home }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Lama Kerja</span>
+                    <span class="detail-value">{{ input_data.Emp_length }} thn</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Tujuan</span>
+                    <span class="detail-value">{{ input_data.Intent }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Pinjaman</span>
+                    <span class="detail-value">${{ "{:,.0f}".format(input_data.Amount) }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Suku Bunga</span>
+                    <span class="detail-value">{{ input_data.Rate }}%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Riwayat Kredit</span>
+                    <span class="detail-value">{{ input_data.Cred_length }} thn</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Riwayat Gagal Bayar</span>
+                    <span class="detail-value">{{ "Ya" if input_data.Prev_Default == "Y" else "Tidak" }}</span>
+                </div>
+            </div>
+
+            <button onclick="window.location.href='/'" class="btn-primary" style="margin-top: 1rem;">
+                <i class="fa-solid fa-rotate-left"></i> Prediksi Nasabah Lain
+            </button>
+        </div>
+    </div>
+
+</body>
+
+</html>

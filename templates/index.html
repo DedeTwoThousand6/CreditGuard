@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreditGuard — Prediksi Gagal Bayar Pinjaman</title>
+    <meta name="description"
+        content="Prediksi risiko gagal bayar pinjaman menggunakan model Regresi Logistik berbasis Machine Learning.">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lottie -->
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
+</head>
+
+<body>
+
+    <!-- Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <h2>Menganalisis Data Nasabah...</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Regresi Logistik sedang memproses data</p>
+    </div>
+
+    <div class="split-card">
+        <!-- Kiri: Info dan Deskripsi -->
+        <div class="split-left">
+            <div class="algo-chip">
+                <i class="fa-solid fa-microchip"></i>
+                Regresi Logistik
+            </div>
+
+            <!-- Lottie Animation -->
+            <dotlottie-wc src="https://lottie.host/7a03aa05-5941-4783-8042-fe50abca5be8/Rij9tWwbOu.lottie"
+                style="width: 180px; height: 180px; margin-bottom: -0.5rem;" autoplay loop>
+            </dotlottie-wc>
+
+            <h1>CreditGuard</h1>
+            <p class="subtitle">
+                Sistem prediksi risiko gagal bayar pinjaman berbasis Machine Learning
+                dengan Regresi Logistik untuk analisis kredit yang cepat dan akurat.
+            </p>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-number">32K+</div>
+                    <div class="stat-label">Data Latih</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">84.5%</div>
+                    <div class="stat-label">AUC Score</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Fitur Input</div>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.4rem; font-size: 0.8rem;">
+                    <i class="fa-solid fa-circle-info" style="margin-right: 6px; color: var(--secondary);"></i>
+                    Prediksi yang dihasilkan
+                </p>
+                <p style="color: var(--text-muted); font-size: 0.78rem; line-height: 1.6;">
+                    ✅ Tidak Berisiko &nbsp;·&nbsp; ⚠️ Berisiko Gagal Bayar
+                </p>
+            </div>
+        </div>
+
+        <!-- Kanan: Form Prediksi -->
+        <div class="split-right">
+            <h2 style="margin-bottom: 0.3rem;">DATA NASABAH</h2>
+            <p style="color: var(--text-muted); font-size: 0.82rem; margin-bottom: 0.8rem;">
+                Isi data nasabah untuk memprediksi risiko gagal bayar
+            </p>
+            <form action="/predict" method="POST" id="predictForm" class="form-container">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="age"><i class="fa-solid fa-user" style="margin-right: 4px;"></i> Usia</label>
+                        <input type="number" name="age" id="age" placeholder="cth: 25" min="18" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="income"><i class="fa-solid fa-dollar-sign" style="margin-right: 4px;"></i>
+                            Pendapatan / Tahun</label>
+                        <input type="number" name="income" id="income" placeholder="cth: 60000" min="1000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="home"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Status
+                            Rumah</label>
+                        <select name="home" id="home" required>
+                            <option value="RENT">Sewa (Rent)</option>
+                            <option value="OWN">Milik Sendiri (Own)</option>
+                            <option value="MORTGAGE">KPR (Mortgage)</option>
+                            <option value="OTHER">Lainnya (Other)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="emp_length"><i class="fa-solid fa-briefcase" style="margin-right: 4px;"></i> Lama
+                            Bekerja (Thn)</label>
+                        <input type="number" name="emp_length" id="emp_length" placeholder="cth: 5" min="0" max="50"
+                            step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="intent"><i class="fa-solid fa-bullseye" style="margin-right: 4px;"></i> Tujuan
+                            Pinjaman</label>
+                        <select name="intent" id="intent" required>
+                            <option value="PERSONAL">Pribadi (Personal)</option>
+                            <option value="EDUCATION">Pendidikan (Education)</option>
+                            <option value="MEDICAL">Medis (Medical)</option>
+                            <option value="VENTURE">Usaha (Venture)</option>
+                            <option value="HOMEIMPROVEMENT">Renovasi Rumah</option>
+                            <option value="DEBTCONSOLIDATION">Konsolidasi Utang</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount"><i class="fa-solid fa-money-bill-wave" style="margin-right: 4px;"></i>
+                            Jumlah Pinjaman</label>
+                        <input type="number" name="amount" id="amount" placeholder="cth: 10000" min="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate"><i class="fa-solid fa-percent" style="margin-right: 4px;"></i> Suku Bunga
+                            (%)</label>
+                        <input type="number" name="rate" id="rate" placeholder="cth: 11.5" min="0" max="30" step="0.01"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cred_length"><i class="fa-solid fa-clock" style="margin-right: 4px;"></i> Lama
+                            Riwayat Kredit (Thn)</label>
+                        <input type="number" name="cred_length" id="cred_length" placeholder="cth: 5" min="0" max="50"
+                            required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="prev_default"><i class="fa-solid fa-triangle-exclamation"
+                                style="margin-right: 4px;"></i> Pernah Gagal Bayar?</label>
+                        <select name="prev_default" id="prev_default" required>
+                            <option value="N">Tidak (N)</option>
+                            <option value="Y">Ya (Y)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Prediksi Risiko Kredit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const predictForm = document.getElementById('predictForm');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        predictForm.addEventListener('submit', function () {
+            loadingOverlay.classList.add('active');
+        });
+    </script>
+</body>
+
+</html>
